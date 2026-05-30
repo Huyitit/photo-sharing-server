@@ -29,7 +29,7 @@ const photoSchema = new mongoose.Schema({
 /**
  * Create a Mongoose Model for a Photo using the photoSchema.
  */
-const Photo = mongoose.model.Photos || mongoose.model("Photos", photoSchema);
+const Photo = mongoose.models.Photos || mongoose.model("Photos", photoSchema);
 
 /**
  * Make this available to our application.

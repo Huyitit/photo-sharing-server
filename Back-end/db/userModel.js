@@ -8,4 +8,4 @@ const userSchema = new mongoose.Schema({
   occupation: { type: String },
 });
 
-module.exports = mongoose.model.Users || mongoose.model("Users", userSchema);
+module.exports = mongoose.models.Users || mongoose.model("Users", userSchema);

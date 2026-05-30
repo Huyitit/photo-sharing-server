@@ -3,9 +3,9 @@ require("dotenv").config();
 
 const models = require("../modelData/models.js");
 
-const User = require("../db/userModel.js");
-const Photo = require("../db/photoModel.js");
-const SchemaInfo = require("../db/schemaInfo.js");
+const User = require("./userModel.js");
+const Photo = require("./photoModel.js");
+const SchemaInfo = require("./schemaInfo.js");
 
 const versionString = "1.0";
 
@@ -25,7 +25,7 @@ async function dbLoad() {
   const mapFakeId2RealId = {};
   for (const user of userModels) {
     userObj = new User({
-      first: user.first_name,
+      first_name: user.first_name,
       last_name: user.last_name,
       location: user.location,
       description: user.description,
