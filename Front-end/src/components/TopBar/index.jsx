@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, matchPath, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import fetchModel from "../../lib/fetchModelData";
@@ -17,6 +17,7 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
   const location = useLocation();
   const [displayText, setDisplayText] = useState("Photo Sharing App");
   const navigate = useNavigate();
+  const uploadInputRef = useRef(null);
 
   useEffect(() => {
     if (!loggedInUser) {
@@ -54,6 +55,41 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
     navigate("/login-register");
   };
 
+  const handleAddPhotoClick = (e) => {
+    e.preventDefault();
+    uploadInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    try {
+      // Use standard fetch because we need FormData and credentials
+      const res = await fetch("http://localhost:8081/photos/new", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      });
+
+      if (res.ok) {
+        alert("Photo uploaded successfully!");
+        // Navigate to the user's own photos to see the new photo
+        navigate(`/photos/${loggedInUser._id}`);
+      } else {
+        alert("Failed to upload photo");
+      }
+    } catch (err) {
+      console.error("Upload error", err);
+    }
+    
+    // Clear the input so the same file can be uploaded again if needed
+    e.target.value = null;
+  };
+
   return (
     <AppBar className="topbar-appBar" position="absolute">
       <Toolbar>
@@ -65,9 +101,21 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
           {displayText}
         </Typography>
         {loggedInUser && (
-          <Button color="inherit" onClick={handleLogout} style={{ marginLeft: 16 }}>
-            Logout
-          </Button>
+          <>
+            <Button color="inherit" onClick={handleAddPhotoClick} style={{ marginLeft: 16 }}>
+              Add Photo
+            </Button>
+            <input 
+              type="file" 
+              accept="image/*" 
+              ref={uploadInputRef} 
+              style={{ display: "none" }} 
+              onChange={handleFileChange} 
+            />
+            <Button color="inherit" onClick={handleLogout} style={{ marginLeft: 16 }}>
+              Logout
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>

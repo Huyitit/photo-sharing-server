@@ -2,6 +2,28 @@ const express = require("express");
 const Photo = require("../db/photoModel");
 const User = require("../db/userModel");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer to save files to your Front-end/src/images directory
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // Adjust this path if your images are located elsewhere (like public/images)
+        const dir = path.join(__dirname, '../../Front-end/src/images');
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
+    },
+    filename: function (req, file, cb) {
+        // Generate a unique filename using timestamp
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 
 // returns list of photos of user {_id, user_id, comments, file_name, date_time}
@@ -105,6 +127,37 @@ router.post("/commentsOfPhoto/:photo_id", async (req, res) => {
         console.error(err);
         res.status(500).send("Server error");
     }
+});
+
+// POST /new - Upload a photo for the current user
+router.post("/new", upload.single('photo'), async (req, res) => {
+    // 1. Check if a user is logged in (session validation)
+    if (!req.session.userId) {
+        return res.status(401).send("Unauthorized: Please login to upload photos");
+    }
+
+    // 2. Check if a file was actually uploaded
+    if (!req.file) {
+        return res.status(400).send("No file uploaded");
+    }
+
+    try {
+        // 3. Create a new Photo document
+        const newPhoto = new Photo({
+            file_name: req.file.filename,
+            user_id: req.session.userId, // Link photo to the logged in user
+            date_time: new Date(),
+            comments: [] // Initialize with an empty comments array
+        });
+
+        // 4. Save to the database
+        await newPhoto.save();
+        res.status(200).send("Photo uploaded successfully");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error during upload");
+    }
+    console.log(res.status);
 });
 
 module.exports = router;

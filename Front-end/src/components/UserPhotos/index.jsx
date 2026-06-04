@@ -9,7 +9,7 @@ import {useParams, useNavigate} from "react-router-dom";
  * Define UserPhotos, a React component of Project 4.
  */
 function UserPhotos () {
-
+    
     const {userId} = useParams();
     const [userPhotos, setUserPhotos] = useState([]);
     const [loading, setLoading] = useState(true);
