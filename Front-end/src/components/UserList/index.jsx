@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 /**
  * Define UserList, a React component of Project 4.
  */
-function UserList() {
+function UserList(props) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function UserList() {
       }
     }
     loadData();
-  }, []);
+  }, [props.updateUserListTrigger]);
 
   const handleUserClick = (userId) => {
     navigate(`/users/${userId}`);

@@ -16,6 +16,14 @@ const App = (props) => {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [advancedFeatures, setAdvancedFeatures] = useState(false); // Problem 5
 
+  // THÊM VÀO ĐÂY: State trigger để làm mới UserList (Giải pháp 2)
+  const [updateUserListTrigger, setUpdateUserListTrigger] = useState(0);
+
+  // THÊM VÀO ĐÂY: Hàm gọi để kích hoạt update (Giải pháp 2)
+  const triggerUserListUpdate = () => {
+    setUpdateUserListTrigger((prev) => prev + 1);
+  };
+
   React.useEffect(() => {
     const checkSession = async () => {
       try {
@@ -45,12 +53,13 @@ const App = (props) => {
                 setLoggedInUser={setLoggedInUser} 
                 advancedFeatures={advancedFeatures}
                 setAdvancedFeatures={setAdvancedFeatures}
+                triggerUserListUpdate={triggerUserListUpdate} // Truyền prop kích hoạt update
               />
             </Grid>
             <div className="main-topbar-buffer" />
             <Grid item sm={2}>
               <Paper className="main-grid-item">
-                {loggedInUser ? <UserList /> : null}
+                {loggedInUser ? <UserList updateUserListTrigger={updateUserListTrigger} /> : null}
               </Paper>
             </Grid>
             <Grid item sm={9}>
@@ -59,8 +68,8 @@ const App = (props) => {
                   {loggedInUser ? (
                     <>
                       <Route path="/users/:userId" element={<UserDetail />} />
-                      <Route path="/photos/:userId" element={<UserPhotos advancedFeatures={advancedFeatures} />} />
-                      <Route path="/photos/:userId/:photoId" element={<UserPhotos advancedFeatures={advancedFeatures} />} />
+                      <Route path="/photos/:userId" element={<UserPhotos advancedFeatures={advancedFeatures} triggerUserListUpdate={triggerUserListUpdate} />} />
+                      <Route path="/photos/:userId/:photoId" element={<UserPhotos advancedFeatures={advancedFeatures} triggerUserListUpdate={triggerUserListUpdate} />} />
                       <Route path="/comments/:userId" element={<UserComments />} />
                       {<Route path="/users" element={<UserList />} />}
                       <Route path="/" element={<UserDetail />} />

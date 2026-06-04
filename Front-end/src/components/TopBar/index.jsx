@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, Button, Checkbox, FormControlLabel } from 
 import fetchModel from "../../lib/fetchModelData";
 import "./styles.css";
 
-function TopBar({ loggedInUser, setLoggedInUser, advancedFeatures, setAdvancedFeatures }) {
+function TopBar({ loggedInUser, setLoggedInUser, advancedFeatures, setAdvancedFeatures, triggerUserListUpdate }) {
     /*
   Besides these components, you need to update the TopBar component in components/TopBar as follows:
   --The left side of the TopBar should have your name.
@@ -84,6 +84,12 @@ function TopBar({ loggedInUser, setLoggedInUser, advancedFeatures, setAdvancedFe
 
       if (res.ok) {
         alert("Photo uploaded successfully!");
+        
+        // Cập nhật số lượng ảnh bằng cách gọi hàm trigger từ App.js (Giải pháp 2)
+        if (triggerUserListUpdate) {
+          triggerUserListUpdate();
+        }
+
         // Navigate to the user's own photos to see the new photo
         navigate(`/photos/${loggedInUser._id}`);
       } else {

@@ -8,7 +8,7 @@ import {useParams, useNavigate} from "react-router-dom";
 /**
  * Define UserPhotos, a React component of Project 4.
  */
-function UserPhotos ({ advancedFeatures }) {
+function UserPhotos ({ advancedFeatures, triggerUserListUpdate }) {
     
     // We now extract both userId and the optional photoId
     const {userId, photoId} = useParams();
@@ -80,6 +80,12 @@ function UserPhotos ({ advancedFeatures }) {
         });
         
         setNewComments({ ...newComments, [id]: "" });
+
+        // Cập nhật số lượng comment bằng cách gọi hàm trigger từ App.js (Giải pháp 2)
+        if (triggerUserListUpdate) {
+            triggerUserListUpdate();
+        }
+
         loadData(); // Reload photos to show the new comment instantly
       } catch (err) {
         console.error("Failed to add comment", err);

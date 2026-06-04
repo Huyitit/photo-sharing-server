@@ -16,7 +16,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(session({
-    secret: 'secretKey',
+    secret: '1812',
     resave: false,
     saveUninitialized: false,
 }));
@@ -24,9 +24,8 @@ app.use(session({
 const adminRouter = require("./routes/adminRouter");
 app.use("/admin", adminRouter);
 
-// Auth middleware
 app.use((req, res, next) => {
-    // Exempt registration (POST /user) from authentication
+    
     if (req.path === '/user' && req.method === 'POST') {
         return next();
     }
