@@ -73,4 +73,38 @@ router.get("/photosOfUser/:id", async (req, res)=>{
     }
 });
 
+// POST /commentsOfPhoto/:photo_id - Add a comment to a photo
+router.post("/commentsOfPhoto/:photo_id", async (req, res) => {
+    const photo_id = req.params.photo_id;
+    const commentText = req.body.comment;
+
+    // 1. Check for empty comment
+    if (!commentText || commentText.trim().length === 0) {
+        return res.status(400).send("Comment cannot be empty");
+    }
+
+    try {
+        // 2. Find the photo
+        const photo = await Photo.findById(photo_id);
+        if (!photo) {
+            return res.status(400).send("Photo not found");
+        }
+
+        // 3. Create and append the new comment
+        const newComment = {
+            comment: commentText,
+            user_id: req.session.userId, // retrieved safely from the session!
+            date_time: new Date()
+        };
+        
+        photo.comments.push(newComment);
+        await photo.save();
+
+        res.status(200).send("Comment added successfully");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error");
+    }
+});
+
 module.exports = router;
