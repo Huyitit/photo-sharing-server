@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Paper, TextField, Button, Box, Divider } from "@mui/material";
+import { Typography, Paper, TextField, Button, Box } from "@mui/material";
 import fetchModel from "../../lib/fetchModelData";
 import { useNavigate } from "react-router-dom";
 
@@ -127,8 +127,8 @@ function LoginRegister({ setLoggedInUser }) {
             <TextField label="Description" value={regDescription} onChange={(e) => setRegDescription(e.target.value)} />
             <TextField label="Occupation" value={regOccupation} onChange={(e) => setRegOccupation(e.target.value)} />
             
-            {regErrorMsg && <Typography color="error">{regErrorMsg}</Typography>}
-            {regSuccessMsg && <Typography color="success.main">{regSuccessMsg}</Typography>}
+            {regErrorMsg && <Typography color = "red">{regErrorMsg}</Typography>}
+            {regSuccessMsg && <Typography color = "green">{regSuccessMsg}</Typography>}
             
             <Button type="submit" variant="contained" color="secondary">
               Register Me

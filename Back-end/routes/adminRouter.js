@@ -56,12 +56,7 @@ router.get("/check", async (req, res) => {
         if (!user) {
             return res.status(401).send("Not logged in");
         }
-        res.status(200).json({
-            _id: user._id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            login_name: user.login_name
-        });
+        res.status(200).json(user);
     } catch(err) {
         console.error(err);
         res.status(500).send("Server error");

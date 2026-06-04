@@ -14,6 +14,7 @@ import LoginRegister from "./components/LoginRegister";
 const App = (props) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [advancedFeatures, setAdvancedFeatures] = useState(false); // Problem 5
 
   React.useEffect(() => {
     const checkSession = async () => {
@@ -39,7 +40,12 @@ const App = (props) => {
         <div>
           <Grid container xs={20} spacing={2}>
             <Grid item xs={12}>
-              <TopBar loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
+              <TopBar 
+                loggedInUser={loggedInUser} 
+                setLoggedInUser={setLoggedInUser} 
+                advancedFeatures={advancedFeatures}
+                setAdvancedFeatures={setAdvancedFeatures}
+              />
             </Grid>
             <div className="main-topbar-buffer" />
             <Grid item sm={2}>
@@ -53,10 +59,11 @@ const App = (props) => {
                   {loggedInUser ? (
                     <>
                       <Route path="/users/:userId" element={<UserDetail />} />
-                      <Route path="/photos/:userId" element={<UserPhotos />} />
+                      <Route path="/photos/:userId" element={<UserPhotos advancedFeatures={advancedFeatures} />} />
+                      <Route path="/photos/:userId/:photoId" element={<UserPhotos advancedFeatures={advancedFeatures} />} />
                       <Route path="/comments/:userId" element={<UserComments />} />
                       {<Route path="/users" element={<UserList />} />}
-                      {/* <Route path="/" element={<UserList />} /> */}
+                      <Route path="/" element={<UserDetail />} />
                     </>
                   ) : (
                     <>

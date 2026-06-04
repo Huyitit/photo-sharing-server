@@ -30,7 +30,6 @@ app.use((req, res, next) => {
     if (req.path === '/user' && req.method === 'POST') {
         return next();
     }
-
     if (req.session.userId) {
         next();
     } else {

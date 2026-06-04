@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, matchPath, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Checkbox, FormControlLabel } from "@mui/material";
 import fetchModel from "../../lib/fetchModelData";
 import "./styles.css";
 
-function TopBar({ loggedInUser, setLoggedInUser }) {
+function TopBar({ loggedInUser, setLoggedInUser, advancedFeatures, setAdvancedFeatures }) {
     /*
   Besides these components, you need to update the TopBar component in components/TopBar as follows:
   --The left side of the TopBar should have your name.
@@ -25,7 +25,10 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
       return;
     }
     const path = location.pathname;
-    const match = matchPath('/users/:userId', path) || matchPath('/photos/:userId', path) || matchPath('/comments/:userId', path);
+    const match = matchPath('/users/:userId', path) || 
+                  matchPath('/photos/:userId', path) || 
+                  matchPath('/photos/:userId/:photoId', path) || 
+                  matchPath('/comments/:userId', path);
     if(match){
       const userId = match.params.userId;
       fetchModel("/user/" + userId)
@@ -106,6 +109,19 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
         </Typography>
         {loggedInUser && (
           <>
+            {/* Advanced Features Checkbox */}
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={advancedFeatures} 
+                  onChange={(e) => setAdvancedFeatures(e.target.checked)} 
+                  style={{ color: 'white' }} 
+                />
+              }
+              label="Enable Advanced Features"
+              style={{ marginLeft: 16 }}
+            />
+            
             <Button color="inherit" onClick={handleAddPhotoClick} style={{ marginLeft: 16 }}>
               Add Photo
             </Button>
