@@ -81,18 +81,16 @@ function UserPhotos ({ advancedFeatures, triggerUserListUpdate }) {
         
         setNewComments({ ...newComments, [id]: "" });
 
-        // Cập nhật số lượng comment bằng cách gọi hàm trigger từ App.js (Giải pháp 2)
-        if (triggerUserListUpdate) {
-            triggerUserListUpdate();
-        }
 
-        loadData(); // Reload photos to show the new comment instantly
+
       } catch (err) {
         console.error("Failed to add comment", err);
       }
+      loadData(); // Reload photos to show the new comment instantly
+      triggerUserListUpdate();
+
     };
     
-    // A helper function to render a single photo (reused for both views)
     const renderPhoto = (photo) => (
       <div key={photo._id} style={{ marginBottom: "40px" }}>
         <img

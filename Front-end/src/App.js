@@ -14,12 +14,10 @@ import LoginRegister from "./components/LoginRegister";
 const App = (props) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
-  const [advancedFeatures, setAdvancedFeatures] = useState(false); // Problem 5
+  const [advancedFeatures, setAdvancedFeatures] = useState(false);
 
-  // THÊM VÀO ĐÂY: State trigger để làm mới UserList (Giải pháp 2)
   const [updateUserListTrigger, setUpdateUserListTrigger] = useState(0);
 
-  // THÊM VÀO ĐÂY: Hàm gọi để kích hoạt update (Giải pháp 2)
   const triggerUserListUpdate = () => {
     setUpdateUserListTrigger((prev) => prev + 1);
   };
@@ -53,7 +51,7 @@ const App = (props) => {
                 setLoggedInUser={setLoggedInUser} 
                 advancedFeatures={advancedFeatures}
                 setAdvancedFeatures={setAdvancedFeatures}
-                triggerUserListUpdate={triggerUserListUpdate} // Truyền prop kích hoạt update
+                triggerUserListUpdate={triggerUserListUpdate}
               />
             </Grid>
             <div className="main-topbar-buffer" />
