@@ -31,6 +31,7 @@ async function dbLoad() {
       description: user.description,
       occupation: user.occupation,
       login_name: user.last_name.toLowerCase(),
+      password: "weak", // Default password for testing
     });
     try {
       await userObj.save();

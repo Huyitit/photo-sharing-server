@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   description: { type: String },
   occupation: { type: String },
   login_name: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, // Added for Problem 4
 });
 
 module.exports = mongoose.models.Users || mongoose.model("Users", userSchema);

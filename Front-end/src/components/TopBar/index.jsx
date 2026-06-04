@@ -25,7 +25,7 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
       return;
     }
     const path = location.pathname;
-    const match = matchPath('/users/:userId', path) || matchPath('/photos/:userId', path);
+    const match = matchPath('/users/:userId', path) || matchPath('/photos/:userId', path) || matchPath('/comments/:userId', path);
     if(match){
       const userId = match.params.userId;
       fetchModel("/user/" + userId)
@@ -37,6 +37,10 @@ function TopBar({ loggedInUser, setLoggedInUser }) {
           else if(match.pathname.split('/')[1] === "photos")
           {
             setDisplayText("Photos of " + user.first_name + " " + user.last_name);
+          }
+          else if(match.pathname.split('/')[1] === "comments")
+          {
+            setDisplayText("Comments of " + user.first_name + " " + user.last_name);
           }
         })
         .catch((err) => console.error("Error fetching user:", err));

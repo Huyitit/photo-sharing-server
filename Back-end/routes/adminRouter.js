@@ -4,15 +4,15 @@ const router = express.Router();
 
 // POST /admin/login
 router.post("/login", async (req, res) => {
-    const { login_name } = req.body;
-    if (!login_name) {
-        return res.status(400).send("login_name is required");
+    const { login_name, password } = req.body;
+    if (!login_name || !password) {
+        return res.status(400).send("login_name and password are required");
     }
 
     try {
-        const user = await User.findOne({ login_name: login_name });
+        const user = await User.findOne({ login_name: login_name, password: password });
         if (!user) {
-            return res.status(400).send("Invalid login name");
+            return res.status(400).send("Invalid login name or password");
         }
 
         // Store user in session

@@ -42,7 +42,7 @@ const App = (props) => {
               <TopBar loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
             </Grid>
             <div className="main-topbar-buffer" />
-            <Grid item sm={3}>
+            <Grid item sm={2}>
               <Paper className="main-grid-item">
                 {loggedInUser ? <UserList /> : null}
               </Paper>
@@ -55,8 +55,8 @@ const App = (props) => {
                       <Route path="/users/:userId" element={<UserDetail />} />
                       <Route path="/photos/:userId" element={<UserPhotos />} />
                       <Route path="/comments/:userId" element={<UserComments />} />
-                      <Route path="/users" element={<UserList />} />
-                      <Route path="/" element={<UserList />} />
+                      {<Route path="/users" element={<UserList />} />}
+                      {/* <Route path="/" element={<UserList />} /> */}
                     </>
                   ) : (
                     <>

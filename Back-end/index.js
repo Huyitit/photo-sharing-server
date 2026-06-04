@@ -26,6 +26,11 @@ app.use("/admin", adminRouter);
 
 // Auth middleware
 app.use((req, res, next) => {
+    // Exempt registration (POST /user) from authentication
+    if (req.path === '/user' && req.method === 'POST') {
+        return next();
+    }
+
     if (req.session.userId) {
         next();
     } else {

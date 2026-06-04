@@ -3,7 +3,34 @@ const User = require("../db/userModel");
 const Photo = require("../db/photoModel");
 const router = express.Router();
 
+// POST / - Register a new user
+router.post("/", async (req, res) => {
+    const { login_name, password, first_name, last_name, location, description, occupation } = req.body;
 
+    // 1. Validation check
+    if (!login_name || !password || !first_name || !last_name) {
+        return res.status(400).send("Login name, password, first name, and last name are required");
+    }
+
+    try {
+        // 2. Uniqueness check
+        const existingUser = await User.findOne({ login_name: login_name });
+        if (existingUser) {
+            return res.status(400).send("Login name already exists. Please choose another.");
+        }
+
+        // 3. Create user
+        const newUser = new User({
+            login_name, password, first_name, last_name, location, description, occupation
+        });
+        await newUser.save();
+
+        res.status(200).json({ login_name: newUser.login_name, _id: newUser._id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error during registration");
+    }
+});
 
 // returns list of users { _id, first_name, last_name, photoCount, commentCount }.
 router.get("/list", async (req, res) => {
