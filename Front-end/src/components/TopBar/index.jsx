@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, matchPath} from "react-router-dom";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { useLocation, matchPath, useNavigate } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import fetchModel from "../../lib/fetchModelData";
 import "./styles.css";
 
-function TopBar() {
-  /*
+function TopBar({ loggedInUser, setLoggedInUser }) {
+    /*
   Besides these components, you need to update the TopBar component in components/TopBar as follows:
   --The left side of the TopBar should have your name.
   The right side of the TopBar should provide app context by reflecting what is being shown in the main content region. 
@@ -16,9 +16,13 @@ function TopBar() {
   // const [displayText, setDisplayText] = useState("Photo Sharing App");
   const location = useLocation();
   const [displayText, setDisplayText] = useState("Photo Sharing App");
-  // const [data, setData] = useState(null)
-  
-  useEffect(()=>{
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loggedInUser) {
+      setDisplayText("Please Login");
+      return;
+    }
     const path = location.pathname;
     const match = matchPath('/users/:userId', path) || matchPath('/photos/:userId', path);
     if(match){
@@ -35,17 +39,36 @@ function TopBar() {
           }
         })
         .catch((err) => console.error("Error fetching user:", err));
+    } else {
+      setDisplayText("Photo Sharing App");
     }
-  }, [location]);
+  }, [location, loggedInUser]);
+
+  const handleLogout = async () => {
+    try {
+      await fetchModel("/admin/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Failed to logout", err);
+    }
+    setLoggedInUser(null);  
+    navigate("/login-register");
+  };
+
   return (
     <AppBar className="topbar-appBar" position="absolute">
       <Toolbar>
         <Typography variant="h5" color="inherit">
           <a href="/">Huy Cao</a>
+          {loggedInUser ? ` | Hi ${loggedInUser.first_name}` : " | Please Login"}
         </Typography>
         <Typography variant="h5" color="inherit" marginLeft="auto">
           {displayText}
         </Typography>
+        {loggedInUser && (
+          <Button color="inherit" onClick={handleLogout} style={{ marginLeft: 16 }}>
+            Logout
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
