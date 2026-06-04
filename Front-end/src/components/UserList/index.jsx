@@ -6,10 +6,11 @@ import {
   ListItemButton,
   Stack,
   Typography,
+  Chip,
+  Box
 } from "@mui/material";
 
 import "./styles.css";
-// import models from "../../modelData/models";
 import fetchModel from "../../lib/fetchModelData";
 import { useNavigate } from "react-router-dom";
 /**
@@ -22,13 +23,14 @@ function UserList() {
 
   useEffect(() =>{
     const loadData = async () =>{
-      // await fetchModel("/user/list").then((res) =>{
-      //   setUsers(res);
-      //   setLoading(false);
-      // });
-      const res = await fetchModel("/user/list");
-      setUsers(res);
-      setLoading(false);
+      try {
+        const res = await fetchModel("/user/list");
+        setUsers(res);
+      } catch (err) {
+        console.error("Failed to fetch users list", err);
+      } finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, []);
@@ -39,42 +41,48 @@ function UserList() {
   const handlePhotoClick = (userId) => {
     navigate(`/photos/${userId}`);
   }
-  
+  const handleCommentClick = (userId) => {
+    navigate(`/comments/${userId}`);
+  }
 
   return (
     <div>
-      {/* <Typography variant="body1">
-          This is the user list, which takes up 3/12 of the window. You might
-          choose to use <a href="https://mui.com/components/lists/">Lists</a>{" "}
-          and <a href="https://mui.com/components/dividers/">Dividers</a> to
-          display your users like so:
-        </Typography> */}
-        {loading === true ? <Typography>Loading...</Typography> : (  
+      {loading === true ? <Typography>Loading...</Typography> : (  
         <List component="nav">
           {users.map((item) => (
-            
-
             <Stack 
-                direction = "row" 
-                divider = {<Divider orientation = "vertical" flexItem/>}
+                key={item._id}
+                direction="row" 
+                divider={<Divider orientation="vertical" flexItem/>}
                 spacing={2}
+                alignItems="center"
               >
                 <ListItemButton onClick={() => handleUserClick(item._id)}>
-                        <ListItemText primary={item.first_name }/>
-
+                  <ListItemText primary={item.first_name} />
                 </ListItemButton>
-                <ListItemButton alignItem = "center" onClick = {() => handlePhotoClick(item._id)}>
-                      <ListItemText primary = "Photos"/>
-                    </ListItemButton>
+                
+                <Box display="flex" alignItems="center" gap={1} pr={2}>
+                  <Chip 
+                    label={item.photoCount ?? 0} 
+                    size="small" 
+                    sx={{ backgroundColor: 'green', color: 'white', cursor: 'pointer' }} 
+                    onClick={() => handlePhotoClick(item._id)} 
+                    title="Photos"
+                  />
+                  <Chip 
+                    label={item.commentCount ?? 0} 
+                    size="small" 
+                    sx={{ backgroundColor: 'red', color: 'white', cursor: 'pointer' }} 
+                    onClick={() => handleCommentClick(item._id)} 
+                    title="Comments"
+                  />
+                </Box>
               </Stack>
           ))}
         </List>
-        )}
-        {/* <Typography variant="body1">
-          The model comes in from models.userListModel()
-        </Typography> */}
-      </div>
-    );
+      )}
+    </div>
+  );
 }
 
 export default UserList;

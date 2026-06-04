@@ -15,7 +15,8 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "https://zwfsw7-8081.csb.app",
+  "proxy2": "https://zwfsw7-8081.csb.app",
+  "proxy": "http://localhost:8081",
   "scripts": {
     "start": "DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
     "build": "react-scripts build",
